@@ -49,10 +49,8 @@ export async function getStaticProps() {
   const data = await fs.readFile(p);
   const parsed_data = JSON.parse(data);
 
-  // Access the movies array from parsed data
   const movies = parsed_data.movies;
 
-  // Use map to transform the movies array
   const filtered_data = movies.map(movie => ({
     id: movie.id,
     title: movie.title,
