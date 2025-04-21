@@ -20,19 +20,26 @@ export default function index(props) {
     console.log(data);
     
      
-  return (
-    <>
-     {data.map(val=>(
-      <div key={val.id}>
-      <li>{val.title}</li>
-      <li>{val.description}</li>
-     <Link href={`/Movies/${val.id}/Director`}> {data2.find((director) => director.id === val.directorId)?.name || "Director not found"}</Link>
-      <li>{val.releaseYear}</li>
-      <li>{val.rating}</li>
-      </div>      
-    ))}
-    </>
-  )
+    return (
+        <>
+          {data.map((val) => (
+            <div key={val.id} style={{ marginBottom: '20px', padding: '10px', border: '1px solid #ddd' }}>
+              <ul style={{ listStyleType: 'none', padding: '0' }}>
+                <li>Title: {val.title}</li>
+                <li><strong>Description:</strong> {val.description}</li>
+                <li>
+                  Director:
+                  <Link href={`/Movies/${val.id}/Director`}>
+                    {data2.find((director) => director.id === val.directorId)?.name || "Director not found"}
+                  </Link>
+                </li>
+                <li>Release Year: {val.releaseYear}</li>
+                <li>Rating: {val.rating}</li>
+              </ul>
+            </div>
+          ))}
+        </>
+      );
 }
 
 export async function getStaticProps(context){

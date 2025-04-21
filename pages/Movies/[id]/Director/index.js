@@ -1,44 +1,39 @@
-import React from 'react'
-import fs from 'fs/promises';
-import path, { parse } from 'path';
-import useSWR from 'swr';
+import React from "react";
+import useSWR from "swr";
+import { useRouter } from "next/router";
 
-export default function index(props) {
+const fetcher = async (url) => {
+  const res = await fetch(url);
+  if (!res.ok) {
+    throw new Error("Failed to fetch data");
+  }
+  return res.json();
+};
+
+export default function DirectorPage() {
+  const router = useRouter();
+  const { id } = router.query;
+
+  // Log the director ID for debugging
+  console.log("Director ID:", id);
+
+  // Use SWR to fetch the director details based on the passed ID
+  const { data, error } = useSWR(
+    id ? `/api/directors/${id}` : null,
+    fetcher
+  );
+
+  if (error) return <div>Failed to load director details.</div>;
+  if (!data) return <div>Loading...</div>;
+
+  // Render the director details
   return (
     <div>
-      director {props.temp}
+      <h1>Director Details</h1>
+      <ul>
+        <li><strong>Name:</strong> {data.name || "Name not available"}</li>
+        <li><strong>Biography:</strong> {data.biography || "Biography not available"}</li>
+      </ul>
     </div>
-  )
-}
-/// use SWR, learn it first
-export async function getStaticProps(context){
-   const id=context.params.id
-       const p=path.join(process.cwd(),'Data','Movies.json');
-       const p2=await fs.readFile(p);
-       const parsed_data=JSON.parse(p2);
-       const data=parsed_data.movies;
-
-   return{
-    props:{
-        temp:id
-    }
-   }
-}
-
-
-
-export async function getStaticPaths(){
-    const p = path.join(process.cwd(), 'Data', 'Movies.json');
-    const p2 = await fs.readFile(p);
-    const parsed_data = JSON.parse(p2);
-    const genres = parsed_data.genres;
-
-    const pathss = genres.map(genre => ({
-        params: { id: genre.id } 
-    }));
-
-    return{
-        paths:pathss,
-        fallback:true
-    }
+  );
 }

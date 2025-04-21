@@ -30,38 +30,55 @@ export default function index(props) {
         const temp = data.filter((movie) => movie.genreId === selectedGenreId);
         setfiltereddata(temp);
     };
-  return (
-    <>
-    <select onChange={(e)=>handleGenreChange(e)} name="genre" id="genre" value={selectedGenre}>
-    {data2.map(val=>(
-        <option key={val.genre_id} value={val.genre_id}>{val.genre_name}</option>
-    ))}
+return (
+  <>
+    <select 
+      onChange={(e) => handleGenreChange(e)} 
+      name="genre" 
+      id="genre" 
+      value={selectedGenre} 
+      style={{ marginBottom: '20px' }}
+    >
+      {data2.map((val) => (
+        <option key={val.genre_id} value={val.genre_id}>
+          {val.genre_name}
+        </option>
+      ))}
     </select>
-    {!flag?
-    <ul>
-    {data.map(val=>(
-      <div key={val.id}>
-      <li>{val.title}</li>
-      <li>{val.releaseYear}</li>
-      <li>{val.rating}</li>
-      <button onClick={()=>handleclick(val.id)}>Explore</button>
-      </div>      
-    ))}
-   </ul>:(
-    filtereddata.map(val=>(
-        <div key={val.id}>
-        <li>{val.title}</li>
-        <li>{val.releaseYear}</li>
-        <li>{val.rating}</li>
-        <button onClick={()=>handleclick(val.id)}>Explore</button>
-        </div>      
-      ))
-   )
-   
 
-}
-    </>
-  )
+    {!flag ? (
+      <ul style={{ listStyleType: 'none', padding: '0' }}>
+        {data.map((val) => (
+          <div key={val.id} style={{ marginBottom: '15px', padding: '10px', border: '1px solid #ddd' }}>
+            <li>Title: {val.title}</li>
+            <li>Release Year: {val.releaseYear}</li>
+            <li>Rating: {val.rating}</li>
+            <button 
+              onClick={() => handleclick(val.id)} 
+              style={{cursor:'pointer'}}
+            >
+              Explore
+            </button>
+          </div>
+        ))}
+      </ul>
+    ) : (
+      filtereddata.map((val) => (
+        <div key={val.id} style={{ marginBottom: '15px', padding: '10px', border: '1px solid #ddd' }}>
+          <li>Title: {val.title}</li>
+          <li>Release Year: {val.releaseYear}</li>
+          <li>Rating: {val.rating}</li>
+          <button 
+            onClick={() => handleclick(val.id)}
+            style={{cursor:'pointer'}}
+          >
+            Explore
+          </button>
+        </div>
+      ))
+    )}
+  </>
+);
 }
 
 export async function getStaticProps() {

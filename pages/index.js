@@ -3,6 +3,7 @@ import fs from 'fs/promises';
 import path, { parse } from 'path';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import Link from "next/link";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -28,19 +29,28 @@ export default function Home(props) {
   }
 
   return (
-   <>
-   <ul>
-    {data.map(val=>(
-      <div key={val.id}>
-      <li>{val.title}</li>
-      <li>{val.releaseYear}</li>
-      <li>{val.rating}</li>
-      </div>      
-    ))}
-   </ul>
-
-   <button  onClick={()=>handleclick()}>Browse Genres</button>
-   </>
+    <>
+      <h2>Top Rated Movies</h2>
+      <ul>
+        {data.map(val => (
+          <li key={val.id} style={{ marginBottom: '15px', borderBottom: '1px solid #ccc' }}>
+            <div><strong>{val.title}</strong></div>
+            <div>Release Year: {val.releaseYear}</div>
+            <div>Rating: {val.rating}</div>
+          </li>
+        ))}
+      </ul>
+  
+      <div style={{ marginTop: '20px' }}>
+        <button style={{cursor:'pointer'}} onClick={handleclick}>Browse Genres</button>
+      </div>
+  
+      <div style={{ marginTop: '10px' }}>
+        <Link href='/Movies'>
+          <button style={{cursor:'pointer'}}> Explore Movies</button>
+        </Link>
+      </div>
+    </>
   );
 }
 
