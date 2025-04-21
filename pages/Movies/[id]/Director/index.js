@@ -1,38 +1,44 @@
 import React from "react";
 import useSWR from "swr";
+import data from "../../../../Data/Movies.json"; 
 import { useRouter } from "next/router";
 
-const fetcher = async (url) => {
-  const res = await fetch(url);
-  if (!res.ok) {
-    throw new Error("Failed to fetch data");
-  }
-  return res.json();
+const fetcher = ([_, movieId]) => {
+  const movie = data.movies.find((movie) => movie.id === movieId);
+
+  const director = data.directors.find((director) => director.id === movie.directorId);
+
+  return { director, movieTitle: movie.title };t
 };
 
 export default function DirectorPage() {
   const router = useRouter();
-  const { id } = router.query;
+  const movieId = router.query.id;
 
-  // Log the director ID for debugging
-  console.log("Director ID:", id);
-
-  // Use SWR to fetch the director details based on the passed ID
-  const { data, error } = useSWR(
-    id ? `/api/directors/${id}` : null,
+  const { data: result, error, isValidating } = useSWR(
+    movieId ? ["movie-director", movieId] : null,
     fetcher
   );
+  if (isValidating) return <div>Loading...</div>;
+  if (error) return <div>Failed to load director details: {error.message}</div>;
+  if (!result) return <div>Loading Director Details...</div>;
 
-  if (error) return <div>Failed to load director details.</div>;
-  if (!data) return <div>Loading...</div>;
 
-  // Render the director details
+  const { director, movieTitle } = result;
+
   return (
     <div>
       <h1>Director Details</h1>
       <ul>
-        <li><strong>Name:</strong> {data.name || "Name not available"}</li>
-        <li><strong>Biography:</strong> {data.biography || "Biography not available"}</li>
+        <li>
+        Movie: {movieTitle || "Movie title not available"}
+        </li>
+        <li>
+         Name:{director.name || "Name not available"}
+        </li>
+        <li>
+          Biography: {director.biography || "Biography not available"}
+        </li>
       </ul>
     </div>
   );
