@@ -19,7 +19,7 @@ export default function index(props) {
 
     const r=useRouter();
     const handleclick=(id)=>{
-        r.push(`/Movies/${id}`)
+        r.push(`/Movies/g${id}`)
     }
 
     const handleGenreChange = (e) => {
@@ -92,6 +92,7 @@ export async function getStaticProps() {
         props:{
             data:final_data,
             data2:final_data2
-        }
+        },
+        revalidate:30
       }
 }
